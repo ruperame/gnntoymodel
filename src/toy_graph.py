@@ -1,6 +1,6 @@
 import torch
 from torch_geometric.data import Data
-import torch.nn as nn  # <--- esta línea es la que falta
+import torch.nn as nn
 import networkx as nx
 import matplotlib.pyplot as plt
 from model import GCN
@@ -26,8 +26,8 @@ x = torch.tensor([
 ], dtype=torch.float)
 
 # Etiqueta: número de pasajeros que llegarán a la estación
-# Para simplificar, supón que es la suma total:
-y = torch.tensor([28.0])  # 3+10+5+8+2
+# Para simplificar, suponemos que es la suma total:
+y = torch.tensor([28.0])  
 
 # Crear objeto Data
 data = Data(x=x, edge_index=edge_index, y=y)
@@ -81,7 +81,7 @@ for epoch in range(200):
     model.train()
     optimizer.zero_grad()
     out = model(data.x, data.edge_index)
-    loss = loss_fn(out[5], data.y)  # solo nos interesa la estación
+    loss = loss_fn(out[5], data.y)  #estación
     loss.backward()
     optimizer.step()
 
