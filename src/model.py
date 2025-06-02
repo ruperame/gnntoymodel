@@ -6,7 +6,7 @@ from torch_geometric.nn import GCNConv
 class GCN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = GCNConv(3, 8)  # ahora entrada con 3 features: suben, bajan y hora
+        self.conv1 = GCNConv(4, 8)  # ahora entrada con 3 features: suben, bajan y hora
         self.conv2 = GCNConv(8, 1)
 
     def forward(self, x, edge_index):
