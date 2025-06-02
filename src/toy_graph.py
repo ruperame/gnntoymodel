@@ -4,6 +4,10 @@ from torch_geometric.data import Data
 from model import GCN
 import networkx as nx
 import matplotlib.pyplot as plt
+import pandas as pd
+import random
+
+resultados = []
 
 def crear_grafo_linea_11():
     nodos_11 = {
@@ -20,14 +24,16 @@ def crear_grafo_linea_11():
     edge_index_11 = torch.tensor([[nodos_11[a], nodos_11[b]] for (a, b, _) in edges_11], dtype=torch.long).t()
     edge_attr_11 = torch.tensor([[w] for (_, _, w) in edges_11], dtype=torch.float)
 
+    horaL11 = 0.0 #10:00
+    # Parametros: suben, bajan, hora
     x_11 = torch.tensor([
-        [5.0, 0.0],
-        [3.0, 1.0],
-        [6.0, 0.0],
-        [0.0, 14.0],
+        [5.0, 0.0, horaL11],
+        [3.0, 1.0, horaL11],
+        [6.0, 0.0, horaL11],
+        [0.0, 14.0, horaL11],
     ], dtype=torch.float)
 
-    y_11 = torch.tensor([14.0])
+    y_11 = torch.tensor([14.0], dtype=torch.float)
     data_11 = Data(x=x_11, edge_index=edge_index_11, edge_attr=edge_attr_11, y=y_11)
     return data_11, nodos_11
 
@@ -46,14 +52,15 @@ def crear_grafo_linea_12():
     edge_index_12 = torch.tensor([[nodos_12[a], nodos_12[b]] for (a, b, _) in edges_12], dtype=torch.long).t()
     edge_attr_12 = torch.tensor([[w] for (_, _, w) in edges_12], dtype=torch.float)
 
+    horaL12 = 0.0
     x_12 = torch.tensor([
-        [8.0, 0.0],
-        [7.0, 1.0],
-        [4.0, 2.0],
-        [0.0, 19.0],
+        [8.0, 0.0, horaL12],
+        [7.0, 1.0, horaL12],
+        [4.0, 2.0, horaL12],
+        [0.0, 19.0, horaL12],
     ], dtype=torch.float)
 
-    y_12 = torch.tensor([19.0])
+    y_12 = torch.tensor([19.0], dtype=torch.float)
     data_12 = Data(x=x_12, edge_index=edge_index_12, edge_attr=edge_attr_12, y=y_12)
     return data_12, nodos_12
 
@@ -90,6 +97,8 @@ def entrenar_y_visualizar(data, nodos, nombre):
 
     print(f"Predicción para la estación: {out[estacion_idx].item():.2f}")
     print(f"Valor real: {data.y.item():.2f}")
+    return out[estacion_idx].item()
+
 
 def visualizar_grafos_combinados(data_11, nodos_11, data_12, nodos_12):
     G = nx.DiGraph()
@@ -133,14 +142,96 @@ def visualizar_grafos_combinados(data_11, nodos_11, data_12, nodos_12):
     plt.show()
 
 # === MAIN EXECUTION ===
+def generar_grafo_por_hora(hora_id, hora_texto):
+    print(f"\n===== ⏰ Franja horaria: {hora_texto} (código {hora_id}) =====")
 
-# Crear y entrenar línea 11
-data_11, nodos_11 = crear_grafo_linea_11()
-entrenar_y_visualizar(data_11, nodos_11, "Línea 11")
+    # Línea 11
+    nodos_11 = {
+        "Acueducto 3": 0,
+        "Pza. Toros": 1,
+        "Gerardo Diego": 2,
+        "Estación AVE": 3,
+    }
+    edges_11 = [
+        ("Acueducto 3", "Pza. Toros", 4),
+        ("Pza. Toros", "Gerardo Diego", 3),
+        ("Gerardo Diego", "Estación AVE", 7),
+    ]
+    edge_index_11 = torch.tensor([[nodos_11[a], nodos_11[b]] for (a, b, _) in edges_11], dtype=torch.long).t()
+    edge_attr_11 = torch.tensor([[w] for (_, _, w) in edges_11], dtype=torch.float)
 
-# Crear y entrenar línea 12
-data_12, nodos_12 = crear_grafo_linea_12()
-entrenar_y_visualizar(data_12, nodos_12, "Línea 12")
+    demanda_hora_11 = {
+    0.0: [6, 4, 5, 15],   # 10:00
+    1.0: [3, 2, 3, 8],    # 12:00
+    2.0: [7, 5, 6, 18],   # 16:00
+    3.0: [2, 1, 2, 6],    # 20:00
+    }
+    suben_bajan_11 = demanda_hora_11[hora_id]
+    x_11 = torch.tensor([
+        [suben_bajan_11[0], random.uniform(0, 2), hora_id],
+        [suben_bajan_11[1], random.uniform(0, 2), hora_id],
+        [suben_bajan_11[2], random.uniform(0, 2), hora_id],
+        [0.0, suben_bajan_11[3], hora_id],
+    ], dtype=torch.float)
+    y_11 = torch.tensor([suben_bajan_11[3]], dtype=torch.float)  # target: estación
+    data_11 = Data(x=x_11, edge_index=edge_index_11, edge_attr=edge_attr_11, y=y_11)
 
-# Mostrar grafo combinado al final
-visualizar_grafos_combinados(data_11, nodos_11, data_12, nodos_12)
+    # Línea 12
+    nodos_12 = {
+        "Centro": 0,
+        "Inst. Andrés Laguna": 1,
+        "Ctra. S. Rafael": 2,
+        "Estación AVE": 3,
+    }
+    edges_12 = [
+        ("Centro", "Inst. Andrés Laguna", 2),
+        ("Inst. Andrés Laguna", "Ctra. S. Rafael", 3),
+        ("Ctra. S. Rafael", "Estación AVE", 7),
+    ]
+    edge_index_12 = torch.tensor([[nodos_12[a], nodos_12[b]] for (a, b, _) in edges_12], dtype=torch.long).t()
+    edge_attr_12 = torch.tensor([[w] for (_, _, w) in edges_12], dtype=torch.float)
+
+    demanda_hora_12 = {
+    0.0: [9, 6, 5, 20],
+    1.0: [4, 3, 2, 9],
+    2.0: [10, 7, 6, 23],
+    3.0: [3, 2, 1, 6],
+    }
+    suben_bajan_12 = demanda_hora_12[hora_id]
+    x_12 = torch.tensor([
+        [suben_bajan_12[0], random.uniform(0, 2), hora_id],
+        [suben_bajan_12[1], random.uniform(0, 2), hora_id],
+        [suben_bajan_12[2], random.uniform(0, 2), hora_id],
+        [0.0, suben_bajan_12[3], hora_id],
+    ], dtype=torch.float)
+    y_12 = torch.tensor([suben_bajan_12[3]], dtype=torch.float)
+
+    data_12 = Data(x=x_12, edge_index=edge_index_12, edge_attr=edge_attr_12, y=y_12)
+
+    # Entrenamiento y recolección de resultados
+    pred_11 = entrenar_y_visualizar(data_11, nodos_11, f"Línea 11 ({hora_texto})")
+    resultados.append({"franja_horaria": hora_texto, "linea": "Línea 11", "prediccion": pred_11, "real": y_11.item()})
+
+    pred_12 = entrenar_y_visualizar(data_12, nodos_12, f"Línea 12 ({hora_texto})")
+    resultados.append({"franja_horaria": hora_texto, "linea": "Línea 12", "prediccion": pred_12, "real": y_12.item()})
+
+
+
+# Franjas horarias
+franjas = [
+    (0.0, "10:00"),
+    (1.0, "12:00"),
+    (2.0, "16:00"),
+    (3.0, "20:00"),
+]
+
+for hora_id, hora_texto in franjas:
+    generar_grafo_por_hora(hora_id, hora_texto)
+
+ # Guardar resultados en CSV
+df_resultados = pd.DataFrame(resultados)
+df_resultados.to_csv("../data/resultados_franjas.csv", index=False)
+print("✅ Resultados guardados en data/resultados_franjas.csv")
+
+
+
