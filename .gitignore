@@ -3,3 +3,4 @@ venv-mac/
 # En el archivo .gitignore
 data/*.csv
 data/*.docx
+data/*.csv
