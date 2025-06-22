@@ -1,0 +1,5 @@
+venv-mac/
+.DS_Store
+# En el archivo .gitignore
+data/*.csv
+data/*.docx
