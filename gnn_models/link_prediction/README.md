@@ -1,111 +1,73 @@
-🧠 Link Prediction con GNN en Transporte Interurbano
+# README - Link Prediction Mejorado
 
-Este proyecto aplica una Graph Neural Network (GNN) para predecir si debería existir una conexión directa (viaje) entre dos puntos del sistema de transporte de buses en Brasil. Utiliza datos reales anonimizados y una arquitectura basada en GCN de PyTorch Geometric.
+Este archivo describe los cambios introducidos respecto a la versión anterior del modelo de predicción de enlaces.
 
-📁 Estructura del Proyecto
+---
 
-gnntoymodel/
-├── data/
-│   ├── venda_passagem_01_2020.csv         # Dataset original
-│   ├── viajes_limpios.csv                 # Dataset limpio y reducido
-│   ├── graph_link_prediction.pt           # Grafo construido con PyG
-│   └── label_encoder.pkl                  # Codificador de nodos
-├── src/
-│   ├── exploratory.ipynb                  # Limpieza y exploración
-│   ├── visual.py                          # Visualización inicial
-├── gnn_models/
-│   ├── link_prediction.py                 # Código principal de entrenamiento y evaluación
-│   ├── gcn_model.pt                       # Pesos entrenados (guardado)
-├── models/
-│   └── gcn_link_model.pt                  # Modelo final entrenado
-└── README.md
-🎯 Objetivo
+## ✨ Mejoras implementadas
 
-Dado un punto de origen y un destino, predecir si existe o debería existir una conexión directa entre ellos.
+### 1. **Features enriquecidos en los nodos**
 
-Esto se plantea como un problema de Link Prediction en grafos dirigidos, usando datos históricos de billetes vendidos.
+* Se han introducido nuevas variables para cada nodo:
 
-🧼 1. Limpieza del Dataset
+  * Hora media de salida desde el nodo.
+  * Estado extraído del nombre del nodo.
+  * Línea más frecuente asociada al nodo.
+* Se realiza one-hot encoding del estado y normalización estándar de las features.
 
-Del archivo original venda_passagem_01_2020.csv, se filtran:
+### 2. **Modelo GCN mejorado**
 
-Solo viajes interestaduales y de tipo Regular
-Se eliminan duplicados y columnas irrelevantes o con ruido
-Se conserva únicamente:
-nu_linha
-ponto_origem_viagem
-ponto_destino_viagem
-data_viagem
-hora_viagem
-El resultado se guarda como viajes_limpios.csv.
+* Se añaden:
 
-🧩 2. Representación como grafo
+  * `BatchNorm1d` para estabilizar el entrenamiento.
+  * `Dropout` para evitar sobreajuste.
+  * Arquitectura de 2 capas GCN.
 
-Nodos: cada localidad (ponto_origem_viagem o ponto_destino_viagem)
-Aristas: cada fila del CSV representa un viaje directo (origen → destino)
-Features de nodo:
-Por defecto, identidad
-Posible extensión: codificación de hora o línea
-Etiquetas de arista:
-1 = conexión real (positiva)
-0 = conexión no observada (negativa), muestreada aleatoriamente
-El grafo se guarda como graph_link_prediction.pt.
+### 3. **Generación de negativos refinada**
 
-🧠 3. Modelo GNN (GCNEncoder)
+* Los pares negativos (no conectados) se seleccionan de forma más inteligente:
 
-class GCNEncoder(nn.Module):
-    def __init__(self, in_channels, hidden_channels):
-        ...
-Dos capas GCN
-Devuelve embeddings por nodo
-🔄 4. Entrenamiento
+  * Mismo nodo de origen que los positivos.
+  * Evita repetir conexiones imposibles o triviales.
+  * Produce *negativos duros* que ayudan al modelo a aprender mejor.
 
-Se entrena un GCN para generar embeddings
-Se predicen conexiones usando producto punto de embeddings
-Se usa pérdida BCEWithLogitsLoss y optimizador Adam
-Se equilibran aristas positivas y negativas
-for epoch in range(100):
-    loss = train()
-📊 5. Evaluación
+### 4. **Evaluación más clara**
 
-Métricas:
-Accuracy
-ROC AUC Score
-Visualización:
-Histogramas de puntuaciones (positivas vs negativas)
-Subgrafo con predicciones coloreadas (verde, rojo, azul)
-📌 Ejemplo de Visualización del Subgrafo
+* Se muestra:
 
-Nombres reales de nodos (con LabelEncoder)
-Colores según tipo de predicción:
-✅ Verde: conexión real y predicha como tal
-❌ Rojo: conexión real no detectada
-❗ Azul: conexión negativa predicha erróneamente como positiva
-🧪 Cómo ejecutar
+  * Curva de pérdida por época.
+  * Histograma de scores para positivos y negativos.
+  * Métricas de `ROC AUC` y `Accuracy`.
 
-# 1. Activar entorno virtual
-source venv-mac/bin/activate
+### 5. **Función de predicción directa**
 
-# 2. Ejecutar el pipeline
-python gnn_models/link_prediction.py
-✅ Requisitos
+* `predict_link(origen_nombre, destino_nombre)` permite consultar la probabilidad de conexión para cualquier par.
 
-Python ≥ 3.10
-PyTorch ≥ 2.0
-PyTorch Geometric
-NetworkX
-scikit-learn
-matplotlib
-pandas
-Instalación (una vez activado el entorno):
+---
 
-pip install torch torchvision torchaudio
-pip install torch-geometric
-pip install matplotlib networkx scikit-learn pandas joblib
-🧠 Futuras mejoras
+## 🌐 Estructura
 
-Usar codificaciones más ricas (hora, día, tipo de línea)
-Agregar pesos a las aristas (frecuencia o volumen)
-Usar un grafo temporal
-Evaluar con más datos y sobre periodos futuros
+* `link_prediction.py`: Script principal.
+* `models/gcn_link_model.pt`: Modelo GCN entrenado.
+* `../../data/graph_link_prediction.pt`: Grafo PyTorch Geometric con embeddings.
+* `../../data/label_encoder.pkl`: Codificador de nodos.
+
+---
+
+## 📊 Resultados esperados
+
+* AUC > 0.89
+* Accuracy mejorable, pero con solapamiento reducido de scores.
+* Menor sobreajuste gracias a features y regularización.
+
+---
+
+## ✅ Próximos pasos recomendados
+
+* Añadir más features: latitud/longitud, población, clúster regional.
+* Comparar con otros modelos: GAT, GraphSAGE.
+* Visualizar embeddings con PCA o UMAP.
+* Hacer tabla de predicciones reales y su presencia en los datos.
+
+---
 
