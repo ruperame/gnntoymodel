@@ -12,6 +12,12 @@
 # 1 si la conexión existe en el grafo (positiva)
 # 0 para conexiones negativas (pares origen-destino no observados, muestreados aleatoriamente)
 
+import sys
+import os
+
+# Añade la raíz del proyecto al sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 import pandas as pd
 import torch
 import networkx as nx
@@ -21,8 +27,8 @@ from torch_geometric.data import Data
 from sklearn.preprocessing import LabelEncoder
 from torch.nn import BCEWithLogitsLoss
 from torch.optim import Adam
-from gnn_models.link_prediction.link_prediction import GCNEncoder, get_positive_negative_edges
-import os
+from gnn_models.link_prediction.models import GCNEncoder, get_positive_negative_edges
+
 
 # Cargar dataset limpio
 df = pd.read_csv('../../data/viajes_limpios.csv')  # o el que hayas generado
