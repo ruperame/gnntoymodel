@@ -1,7 +1,6 @@
 import pandas as pd
 import folium
 
-# Leer ubicaciones
 df = pd.read_csv("../data/ubicaciones_paradas.csv")
 
 # Diccionario de coordenadas por parada
@@ -27,7 +26,7 @@ tiempos_12 = {
     ("Carretera San Rafael", "Estación AVE"): 7,
 }
 
-# Dibujar línea 11 (azul), tramo a tramo con tooltip
+# Dibujar línea 11 (azul)
 for (origen, destino), tiempo in tiempos_11.items():
     folium.PolyLine(
         locations=[coords[origen], coords[destino]],
@@ -36,7 +35,7 @@ for (origen, destino), tiempo in tiempos_11.items():
         tooltip=f"{origen} → {destino}: {tiempo} min"
     ).add_to(m)
 
-# Dibujar línea 12 (verde), tramo a tramo con tooltip
+# Dibujar línea 12 (verde)
 for (origen, destino), tiempo in tiempos_12.items():
     folium.PolyLine(
         locations=[coords[origen], coords[destino]],
@@ -58,4 +57,4 @@ for parada, (lat, lon) in coords.items():
 
 # Guardar mapa
 m.save("mapa_lineas_11_12.html")
-print("✅ Mapa generado como 'mapa_lineas_11_12.html'")
+print("Mapa generado como 'mapa_lineas_11_12.html'")
