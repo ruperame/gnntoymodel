@@ -68,7 +68,7 @@ data_test = create_data(df_test)
 torch.save(data_train, "../../data/graph_demand_train.pt")
 torch.save(data_test, "../../data/graph_demand_test.pt")
 
-print("✅ Datos de entrenamiento y test generados.")
+print("Datos de entrenamiento y test generados.")
 
 # Modelo GCN para regresión sobre aristas
 class GCNEdgeRegressor(nn.Module):
@@ -153,4 +153,4 @@ evaluate(data_test, title="Evaluación sobre test")
 os.makedirs('models', exist_ok=True)
 torch.save(model.state_dict(), 'models/gcn_demand_model.pt')
 joblib.dump(le, '../../data/label_encoder.pkl')
-print("✅ Modelo guardado en 'models/gcn_demand_model.pt'")
+print("Modelo guardado en 'models/gcn_demand_model.pt'")
