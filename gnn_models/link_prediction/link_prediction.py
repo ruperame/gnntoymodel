@@ -268,9 +268,9 @@ visualizar_subgrafo(data, z, pos_edge_index, neg_edge_index)
 # Guardar modelo
 os.makedirs('models', exist_ok=True)
 torch.save(model.state_dict(), 'models/gcn_link_model.pt')
-print("✅ Modelo guardado en 'models/gcn_link_model.pt'")
+print("Modelo guardado en 'models/gcn_link_model.pt'")
 
-# Mostrar evolución de la pérdida (si has guardado las pérdidas por época)
+# Mostrar evolución de la pérdida
 import matplotlib.pyplot as plt
 
 losses = []
@@ -309,7 +309,7 @@ def predict_link(origen_nombre, destino_nombre):
         u = le.transform([origen_nombre])[0]
         v = le.transform([destino_nombre])[0]
     except ValueError:
-        print("⚠️ Uno de los nombres no existe en el grafo.")
+        print("Uno de los nombres no existe en el grafo.")
         return None
 
     # Predecir
