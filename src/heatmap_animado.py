@@ -4,10 +4,9 @@ from folium.plugins import TimestampedGeoJson
 import json
 from datetime import datetime
 
-# Cargar datos
 df = pd.read_csv("../data/resultados_franjas.csv")
 
-# Coordenadas por parada (puedes cargarlo de archivo si lo prefieres)
+# Coordenadas por parada
 coords = {
     "Acueducto 3": (40.9485273, -4.1177604),
     "Pza. Toros": (40.9421713, -4.1076958),
@@ -18,7 +17,7 @@ coords = {
     "Estación AVE": (40.9105922, -4.0956776),
 }
 
-# Cargar predicciones como si fueran demanda por franja y línea
+# Cargar predicciones 
 features = []
 for i, row in df.iterrows():
     # solo usamos la estación
@@ -60,4 +59,4 @@ TimestampedGeoJson({
 
 # Guardar mapa
 m.save("mapa_heatmap_animado.html")
-print("✅ Heatmap animado guardado como 'mapa_heatmap_animado.html'")
+print("Heatmap animado guardado como 'mapa_heatmap_animado.html'")
