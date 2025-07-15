@@ -234,7 +234,7 @@ for epoch in range(200):
     if epoch % 20 == 0:
         print(f"Epoch {epoch} - Loss: {total_loss:.4f}")
 
-print("\n✅ Entrenamiento completado.")
+print("\n Entrenamiento completado.")
 
 # === EVALUACIÓN FINAL ===
 
@@ -259,7 +259,7 @@ for i, data in enumerate(dataset):
 # === GUARDADO EN CSV ===
 df_resultados = pd.DataFrame(resultados)
 df_resultados.to_csv("../data/resultados_franjas.csv", index=False)
-print("✅ Resultados guardados en data/resultados_franjas.csv")
+print("Resultados guardados en data/resultados_franjas.csv")
 
 # === VISUALIZACIÓN DE RESULTADOS: Predicción vs Real ===
 import seaborn as sns
@@ -276,7 +276,7 @@ sns.barplot(data=df_resultados, x="franja_horaria", y="prediccion", hue="linea",
 # Puntos reales (valor verdadero)
 sns.scatterplot(data=df_resultados, x="franja_horaria", y="real", hue="linea", style="linea", s=120, legend=False)
 
-plt.title("📊 Predicción vs Valor real por franja horaria y línea")
+plt.title("Predicción vs Valor real por franja horaria y línea")
 plt.ylabel("Pasajeros en estación")
 plt.xlabel("Franja horaria")
 plt.grid(True, linestyle='--', alpha=0.5)
