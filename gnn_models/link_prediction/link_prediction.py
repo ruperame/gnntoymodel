@@ -176,7 +176,7 @@ plt.show()
 # === Paso 8: Guardar modelo y función predictiva ===
 os.makedirs('models', exist_ok=True)
 torch.save(model.state_dict(), 'models/gcn_link_model.pt')
-print("✅ Modelo guardado en 'models/gcn_link_model.pt'")
+print("Modelo guardado en 'models/gcn_link_model.pt'")
 
 # === Predicción individual ===
 def predict_link(origen_nombre, destino_nombre):
@@ -189,7 +189,7 @@ def predict_link(origen_nombre, destino_nombre):
         u = le.transform([origen_nombre])[0]
         v = le.transform([destino_nombre])[0]
     except ValueError:
-        print("⚠️ Uno de los nombres no existe en el grafo.")
+        print("Uno de los nombres no existe en el grafo.")
         return None
     z = model(data.x, data.edge_index)
     score = (z[u] * z[v]).sum().item()
