@@ -143,7 +143,7 @@ def visualizar_grafos_combinados(data_11, nodos_11, data_12, nodos_12):
 
 # === MAIN EXECUTION ===
 def generar_grafo_por_hora(hora_id, hora_texto):
-    print(f"\n===== ⏰ Franja horaria: {hora_texto} (código {hora_id}) =====")
+    print(f"\n===== Franja horaria: {hora_texto} (código {hora_id}) =====")
 
     # Línea 11
     nodos_11 = {
@@ -231,7 +231,7 @@ for hora_id, hora_texto in franjas:
  # Guardar resultados en CSV
 df_resultados = pd.DataFrame(resultados)
 df_resultados.to_csv("../data/resultados_franjas.csv", index=False)
-print("✅ Resultados guardados en data/resultados_franjas.csv")
+print("Resultados guardados en data/resultados_franjas.csv")
 
 
 
