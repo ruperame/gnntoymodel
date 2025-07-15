@@ -1,7 +1,6 @@
 import pandas as pd
 import folium
 
-# Leer ubicaciones
 df = pd.read_csv("../data/ubicaciones_paradas.csv")
 
 # Diccionario de coordenadas por parada
@@ -58,4 +57,4 @@ for parada, (lat, lon) in coords.items():
 
 # Guardar mapa
 m.save("mapa_lineas_11_12.html")
-print("✅ Mapa generado como 'mapa_lineas_11_12.html'")
+print("Mapa generado como 'mapa_lineas_11_12.html'")
