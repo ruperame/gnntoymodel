@@ -4,7 +4,6 @@ from folium.plugins import TimestampedGeoJson
 import json
 from datetime import datetime
 
-# Cargar datos
 df = pd.read_csv("../data/resultados_franjas.csv")
 
 # Coordenadas por parada (puedes cargarlo de archivo si lo prefieres)
@@ -60,4 +59,4 @@ TimestampedGeoJson({
 
 # Guardar mapa
 m.save("mapa_heatmap_animado.html")
-print("✅ Heatmap animado guardado como 'mapa_heatmap_animado.html'")
+print("Heatmap animado guardado como 'mapa_heatmap_animado.html'")
