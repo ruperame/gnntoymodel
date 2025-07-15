@@ -134,9 +134,9 @@ def run_training(df_split, franja):
     r2 = r2_score(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
     print(f"\n🔎 [{franja}] Evaluación sobre test:")
-    print(f"📉 MSE: {mse:.2f}")
-    print(f"📈 R²: {r2:.2f}")
-    print(f"📊 MAE: {mae:.2f}")
+    print(f" MSE: {mse:.2f}")
+    print(f" R²: {r2:.2f}")
+    print(f" MAE: {mae:.2f}")
 
     # === Gráfico regresión ===
     plt.figure(figsize=(8, 6))
@@ -168,4 +168,4 @@ def run_training(df_split, franja):
 run_training(low, "baja")
 run_training(mid, "media")
 run_training(high, "alta")
-print("✅ Modelos entrenados y gráficos generados.")
+print(" Modelos entrenados y gráficos generados.")
